@@ -55,7 +55,6 @@
 // });
 
 import express from "express";
-import cors from 'cors'
 import { Schema, model, mongoose } from 'mongoose';
 
 const app = express();
@@ -72,7 +71,6 @@ const todoSchema = new Schema({
 const Todo = model('Todo', todoSchema);
 
 //middleware
-app.use(cors()); //для того щоб можно було відправляти з різних ip, запроси до нашого серверу
 app.use(express.json()); //для  того щоб express розумів що дані з фронту будуть приходити у форматі json
 
 // Роути
