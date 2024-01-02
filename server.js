@@ -1,6 +1,7 @@
 import express, { json } from 'express';
 import { connect, Schema, model } from 'mongoose';
 import dotenv from 'dotenv';
+const cors = require('cors');
 
 dotenv.config();
 
