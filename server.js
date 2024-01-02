@@ -4,9 +4,12 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const DB_HOST = process.env.DB_HOST;
 const app = express();
-const PORT = process.env.PORT || 3000;
+const DB_HOST = process.env.DB_HOST;
+const PORT = process.env.PORT;
+
+// Enable CORS for all routes
+app.use(cors());
 
 // Connect to the MongoDB database
 connect(DB_HOST)
@@ -29,7 +32,7 @@ app.use(json());
 
 // Routes...
 // Route to fetch all todos
-app.get('/api/todos', async (req, res) => {
+app.get('/todos', async (req, res) => {
     try {
         const todos = await Todo.find(); // Retrieve all todos from the database
         res.json(todos); // Respond with the fetched todos
@@ -39,7 +42,7 @@ app.get('/api/todos', async (req, res) => {
 });
 
 // Route to add a new todo
-app.post('/api/todos', async (req, res) => {
+app.post('/todos', async (req, res) => {
     const { title, completed } = req.body;
 
     try {
@@ -52,7 +55,7 @@ app.post('/api/todos', async (req, res) => {
 });
 
 // Route to delete a todo by ID
-app.delete('/api/todos/:id', async (req, res) => {
+app.delete('/todos/:id', async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -67,7 +70,7 @@ app.delete('/api/todos/:id', async (req, res) => {
 });
 
 // Route to edit a todo by ID
-app.put('/api/todos/:id', async (req, res) => {
+app.put('/todos/:id', async (req, res) => {
     const { id } = req.params;
     const { title, completed } = req.body;
 
@@ -87,7 +90,7 @@ app.put('/api/todos/:id', async (req, res) => {
 });
 
 
-app.post('/api/save-todos', async (req, res) => {
+app.post('/save-todos', async (req, res) => {
     const todosArray = req.body; // Отримання масиву об'єктів з запиту
 
     try {
