@@ -5,7 +5,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Підключення до бази даних MongoDB
-connect('mongodb+srv://Eujinn:QZqQtLkTaKRcG9Uf@cluster0.v4ll3w5.mongodb.net/db-todo?retryWrites=true&w=majority', {   
+connect('mongodb+srv://Eujinn:QZqQtLkTaKRcG9Uf@cluster0.v4ll3w5.mongodb.net/db-todo?retryWrites=true&w=majority', {
+  
 });
 
 // Схема та модель для Todo
