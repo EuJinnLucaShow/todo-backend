@@ -1,25 +1,23 @@
-const express = require('express');
-const mongoose = require('mongoose');
+import express, { json } from 'express';
+import { connect, Schema, model } from 'mongoose';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Підключення до бази даних MongoDB
-mongoose.connect('mongodb+srv://Eujinn:QZqQtLkTaKRcG9Uf@cluster0.v4ll3w5.mongodb.net/db-todo?retryWrites=true&w=majority', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+connect('mongodb+srv://Eujinn:QZqQtLkTaKRcG9Uf@cluster0.v4ll3w5.mongodb.net/db-todo?retryWrites=true&w=majority', {   
 });
 
 // Схема та модель для Todo
-const todoSchema = new mongoose.Schema({
+const todoSchema = new Schema({
     title: String,
     description: String,
     completed: Boolean,
 });
 
-const Todo = mongoose.model('Todo', todoSchema);
+const Todo = model('Todo', todoSchema);
 
-app.use(express.json());
+app.use(json());
 
 // Роути
 
