@@ -1,9 +1,7 @@
 import express, { json } from 'express';
 import { connect, Schema, model } from 'mongoose';
-import dotenv from 'dotenv';
 import cors from 'cors';
-
-dotenv.config();
+import 'dotenv/config';
 
 const app = express();
 const DB_HOST = process.env.DB_HOST;
