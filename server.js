@@ -36,7 +36,7 @@ app.use(json());
 
 // Routes...
 // Route to fetch all todos
-app.get('/todos', async (req, res) => {
+app.get('/todos', async (_req, res) => {
     try {
         const todos = await Todo.find(); // Retrieve all todos from the database
         res.json(todos); // Respond with the fetched todos
@@ -95,20 +95,27 @@ app.put('/todos/:_id', async (req, res) => {
 
 
 app.post('/save-todos', async (req, res) => {
-    const todosArray = req.body; // Отримання масиву об'єктів з запиту
+  const todosArray = req.body; // Отримання масиву об'єктів з запиту
 
-    try {
-        // Очищення попередніх даних про todo у базі даних (опціонально)
-        await Todo.deleteMany({});
+  try {
+    // Перебудова масиву елементів для оновлення порядку
+    const todosWithOrder = todosArray.map((todo, index) => ({
+      ...todo,
+      order: index, // Припускаючи, що порядок визначається порядком елементів у масиві
+    }));
 
-        // Зберігання нового масиву об'єктів в базі даних
-        const savedTodos = await Todo.insertMany(todosArray);
+    // Очищення попередніх даних про todo у базі даних (опціонально)
+    await Todo.deleteMany({});
 
-        res.status(201).json(savedTodos); // Відповідь збереженим масивом об'єктів
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+    // Зберігання нового масиву об'єктів в базі даних
+    const savedTodos = await Todo.insertMany(todosWithOrder);
+
+    res.status(201).json(savedTodos); // Відповідь збереженим масивом об'єктів
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 });
+
 
 // Start the server
 app.listen(PORT, () => {
