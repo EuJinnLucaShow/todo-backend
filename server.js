@@ -9,10 +9,8 @@ const app = express();
 const DB_HOST = process.env.DB_HOST;
 const PORT = process.env.PORT;
 
-// Enable CORS for all routes
 app.use(cors());
 
-// Connect to the MongoDB database
 connect(DB_HOST)
   .then(() => {
     console.log('Connected to MongoDB');
@@ -21,7 +19,6 @@ connect(DB_HOST)
     console.error('MongoDB connection error:', error);
   });
 
-// Schema and model for Todo
 const todoSchema = new Schema(
     {
   title: String,  
@@ -34,46 +31,43 @@ const Todo = model('Todo', todoSchema);
 
 app.use(json());
 
-// Routes...
-// Route to fetch all todos
 app.get('/todos', async (_req, res) => {
     try {
-        const todos = await Todo.find(); // Retrieve all todos from the database
-        res.json(todos); // Respond with the fetched todos
+        const todos = await Todo.find(); 
+        res.json(todos); 
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
 
-// Route to add a new todo
 app.post('/todos', async (req, res) => {
     const { title, completed } = req.body;
 
     try {
         const newTodo = new Todo({ title, completed });
-        const savedTodo = await newTodo.save(); // Save the new todo to the database
-        res.status(201).json(savedTodo); // Respond with the created todo
+        const savedTodo = await newTodo.save(); 
+        res.status(201).json(savedTodo); 
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 });
 
-// Route to delete a todo by ID
+
 app.delete('/todos/:_id', async (req, res) => {
     const { _id } = req.params;
 
     try {
-        const deletedTodo = await Todo.findByIdAndDelete(_id); // Find and delete the todo by ID
+        const deletedTodo = await Todo.findByIdAndDelete(_id); 
         if (!deletedTodo) {
             return res.status(404).json({ message: 'Todo not found' });
         }
-        res.json(deletedTodo); // Respond with the deleted todo
+        res.json(deletedTodo); 
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
 
-// Route to edit a todo by ID
+
 app.put('/todos/:_id', async (req, res) => {
     const { _id } = req.params;
     const { title, completed } = req.body;
@@ -87,7 +81,7 @@ app.put('/todos/:_id', async (req, res) => {
         if (!updatedTodo) {
             return res.status(404).json({ message: 'Todo not found' });
         }
-        res.json(updatedTodo); // Respond with the updated todo
+        res.json(updatedTodo); 
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -95,29 +89,26 @@ app.put('/todos/:_id', async (req, res) => {
 
 
 app.post('/save-todos', async (req, res) => {
-  const todosArray = req.body; // Отримання масиву об'єктів з запиту
+  const todosArray = req.body; 
 
   try {
-    // Перебудова масиву елементів для оновлення порядку
+    
     const todosWithOrder = todosArray.map((todo, index) => ({
       ...todo,
-      order: index, // Припускаючи, що порядок визначається порядком елементів у масиві
+      order: index, 
     }));
 
-    // Очищення попередніх даних про todo у базі даних (опціонально)
     await Todo.deleteMany({});
 
-    // Зберігання нового масиву об'єктів в базі даних
     const savedTodos = await Todo.insertMany(todosWithOrder);
 
-    res.status(201).json(savedTodos); // Відповідь збереженим масивом об'єктів
+    res.status(201).json(savedTodos); 
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 });
 
 
-// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
