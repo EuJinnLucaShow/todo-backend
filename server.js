@@ -56,11 +56,11 @@ app.post('/todos', async (req, res) => {
 });
 
 // Route to delete a todo by ID
-app.delete('/todos/:id', async (req, res) => {
-    const { id } = req.params;
+app.delete('/todos/:_id', async (req, res) => {
+    const { _id } = req.params;
 
     try {
-        const deletedTodo = await Todo.findByIdAndDelete(id); // Find and delete the todo by ID
+        const deletedTodo = await Todo.findByIdAndDelete(_id); // Find and delete the todo by ID
         if (!deletedTodo) {
             return res.status(404).json({ message: 'Todo not found' });
         }
@@ -71,15 +71,14 @@ app.delete('/todos/:id', async (req, res) => {
 });
 
 // Route to edit a todo by ID
-app.put('/todos/:id', async (req, res) => {
-    const { id } = req.params;
+app.put('/todos/:_id', async (req, res) => {
+    const { _id } = req.params;
     const { title, completed } = req.body;
 
     try {
         const updatedTodo = await Todo.findByIdAndUpdate(
-            id,
-            { title, completed },
-            { new: true } // Get the updated todo after the update
+            _id,
+            { title, completed }            
         );
         if (!updatedTodo) {
             return res.status(404).json({ message: 'Todo not found' });
