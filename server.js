@@ -22,10 +22,13 @@ connect(DB_HOST)
   });
 
 // Schema and model for Todo
-const todoSchema = new Schema({
+const todoSchema = new Schema(
+    {
   title: String,  
-  completed: Boolean,
-});
+  completed: Boolean  
+    },
+    { versionKey: false }
+);
 
 const Todo = model('Todo', todoSchema);
 
@@ -78,7 +81,8 @@ app.put('/todos/:_id', async (req, res) => {
     try {
         const updatedTodo = await Todo.findByIdAndUpdate(
             _id,
-            { title, completed }            
+            { title, completed },
+            { new: true }
         );
         if (!updatedTodo) {
             return res.status(404).json({ message: 'Todo not found' });
